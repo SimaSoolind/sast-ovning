@@ -19,9 +19,12 @@ const ADMIN_PASSWORD = "hemligt123"; //rad 18 är en såbarhet hemligheter ska i
 // Sök produkter
 app.get("/search", (req, res) => {
   const q = req.query.q;
-  const sql = "SELECT * FROM products WHERE name LIKE '%" + q + "%'"; //// inga paramateserade variabler
+  const sql = "SELECT * FROM products WHERE name LIKE ?"; // den rätta delen   
+  // innan:'%+ q + %'"// inga paramateserade variabler
+  //Efter: sökordet ska skickas seperat i en lista , med % före och efter
 
-  db.all(sql, (err, rows) => {
+
+  db.all(sql,["%" + q + "%"], (err, rows) => {
     if (err) return res.status(500).send("Fel");
     // Visar sökordet direkt på sidan
     res.send("<h1>Resultat för " + q + "</h1>" + JSON.stringify(rows));// sökordet visas utan output encoding
